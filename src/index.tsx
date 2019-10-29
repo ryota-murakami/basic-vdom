@@ -1,0 +1,5 @@
+import { h } from './v-dom'
+
+const Foo = () => <div>foo</div>
+
+console.log(JSON.stringify(<section bar="bar"><Foo /></section>, null, 2))
