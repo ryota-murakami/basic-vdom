@@ -40,3 +40,42 @@ export function h(
     ? name(props.attrs, props.children)
     : { type: 'element', name, props }
 }
+
+function setAttr(el: Element, k: string, attr: any) {
+  if (/^on/.test(k) || k === 'checked' || k === 'value') {
+    el[k] = attr
+  } else {
+    el.setAttribute(k, attr)
+  }
+}
+
+function removeAttr(el: Element, k: string) {
+  if (/^on/.test || k === 'checked' || k === 'value') {
+    el[k] = null
+  } else {
+    el.removeAttribute(k)
+  }
+}
+
+function updateAttrs(el: Element, oldAttrs: Attrs, newAttrs: Attrs) {
+  for (const k in { ...oldAttrs, ...newAttrs }) {
+    oldAttrs[k] !== null && newAttrs[k] == null && removeAttr(el, k)
+    newAttrs[k] !== null && setAttr(el, k, newAttrs[k])
+  }
+}
+
+function createElement(vnode: VNode): Node {
+  switch (vnode.type) {
+    case 'text': {
+      const node = document.createTextNode(vnode.name as string)
+      return node
+    }
+    case 'element': {
+      const node = document.createElement(vnode.name as string)
+      const { attrs, children } = vnode.props
+      updateAttrs(node, {}, attrs)
+      children.forEach(child => node.appendChild(createElement(child)))
+      return node
+    }
+  }
+}
