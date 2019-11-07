@@ -64,16 +64,21 @@ function updateAttrs(el: Element, oldAttrs: Attrs, newAttrs: Attrs) {
   }
 }
 
+const getNode = (vnode: any): Node => vnode && vnode._node
+const setNode = (vnode: any, node: Node) => (vnode._node = node)
+
 function createElement(vnode: VNode): Node {
   switch (vnode.type) {
     case 'text': {
       const node = document.createTextNode(vnode.name as string)
+      setNode(vnode, Node)
       return node
     }
     case 'element': {
       const node = document.createElement(vnode.name as string)
       const { attrs, children } = vnode.props
       updateAttrs(node, {}, attrs)
+      setNode(vnode, attrs)
       children.forEach(child => node.appendChild(createElement(child)))
       return node
     }
