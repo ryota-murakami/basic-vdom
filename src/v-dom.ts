@@ -71,16 +71,41 @@ function createElement(vnode: VNode): Node {
   switch (vnode.type) {
     case 'text': {
       const node = document.createTextNode(vnode.name as string)
-      setNode(vnode, Node)
+      setNode(vnode, node)
       return node
     }
     case 'element': {
       const node = document.createElement(vnode.name as string)
       const { attrs, children } = vnode.props
       updateAttrs(node, {}, attrs)
-      setNode(vnode, attrs)
+      setNode(vnode, node)
       children.forEach(child => node.appendChild(createElement(child)))
       return node
     }
+  }
+}
+
+function patch(parent: Node, old: VNode, vnode: VNode) {
+  if (old === vnode) return
+
+  const node = getNode(old)
+
+  if (!old && vnode) {
+    createElementThenInsert(parent, vnode)
+  } else if (old && !vnode) {
+    removeElementThenInsert(old)
+  } else if (old.type !== vnode.type) {
+    if (old.type !== 'text') {
+      node.nodeValue = vnode.name as string
+      setNode(vnode, node)
+      return
+    }
+    createElementThenInsert(parent, vnode, node)
+    removeElement(old)
+  } else {
+    setNode(vnode, node)
+    if (old.type === 'text') return
+    updateElement(node as Element, old.props.attrs, vnode.props.attrs)
+    reconcileChildren(node, old.props.children, vnode.props.children)
   }
 }
