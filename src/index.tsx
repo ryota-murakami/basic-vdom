@@ -1,13 +1,11 @@
-import { h } from './v-dom'
+import { h, render } from './v-dom'
 
-const Foo = () => <div>foo</div>
-
-console.log(
-  JSON.stringify(
-    <section bar="bar">
-      <Foo />
-    </section>,
-    null,
-    2
+export const App = () => {
+  return (
+    <div>
+      <h1>App</h1>
+    </div>
   )
-)
+}
+
+render(<App/>)
