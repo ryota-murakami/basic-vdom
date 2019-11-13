@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module":"commonjs",
+    "module": "commonjs",
     "jsx": "react",
     "jsxFactory": "h",
     "noImplicitAny": false,
-    "outDir": "dist",
     "rootDir": "src"
   }
 }
